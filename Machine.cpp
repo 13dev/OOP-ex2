@@ -61,106 +61,66 @@ Machine::Machine(MenuData t_menuData)
         //Criar novo cartao inicializado tudo a zero para evitar garbage nums.
         Card t_Card = {0};
 
-        const EnumGenerateMode t_GenerateMode = Menu::AskGenerateMode();
-
         printf("----- Apostando no (%i) Cartão -----\n", i + 1);
 
-        switch (t_menuData.mode)
-        {
-            case EnumChoices::MULTIPLE:
-            {
-                // Perguntar numero de chaves e estrelas a apostar.
-                const int t_NumKeys = AskNumberBetween(EnumContext::KEY, MIN_KEYS, MAX_KEYS);
-                const int t_NumStars = AskNumberBetween(EnumContext::STAR, MIN_STARS, MAX_STARS);
+        // Perguntar numero de numeros e estrelas a apostar.
+        const int t_NumKeys = EnumChoices::MULTIPLE == t_menuData.mode
+                ? AskNumberBetween(EnumContext::KEY, MIN_KEYS, MAX_KEYS)
+                : MAX_NORMAL_KEYS;
 
-                //Inserir estrelas
-                InsertStars(t_Card, t_NumStars, t_GenerateMode);
+        const int t_NumStars = EnumChoices::MULTIPLE == t_menuData.mode
+                ? AskNumberBetween(EnumContext::STAR, MIN_STARS, MAX_STARS)
+                : MAX_NORMAL_STARS;
 
-                std::cout << "\n Estrelas: ";
-                std::cout << PrintArray(t_Card.stars) << std::endl;
+        //Inserir estrelas
+        InsertContext(EnumContext::STAR, t_Card.stars, t_NumStars, t_menuData.generateMode);
 
-                // Inserir chaves
-                InsertKeys(t_Card, t_NumKeys, t_GenerateMode);
+        // Inserir numeros
+        InsertContext(EnumContext::KEY, t_Card.keys, t_NumKeys, t_menuData.generateMode);
 
-                std::cout << "\n Chaves: ";
-                std::cout << PrintArray(t_Card.keys) << std::endl;
-
-                break;
-            }
-            case EnumChoices::NORMAL:
-
-                //Inserir estrelas
-                InsertStars(t_Card, MAX_NORMAL_STARS, t_GenerateMode);
-
-                std::cout << "\n Estrelas: ";
-                std::cout << PrintArray(t_Card.stars) << std::endl;
-
-
-                // Inserir chaves
-                InsertKeys(t_Card, MAX_NORMAL_KEYS, t_GenerateMode);
-
-                std::cout << "\n Chaves: ";
-                std::cout << PrintArray(t_Card.keys) << std::endl;
-
-                break;
-        }
-
+        // Inserir cartão
         InsertCard(t_Card, i);
     }
-}
 
+    for (int i = 0; i < t_menuData.numCards; ++i) {
 
-void Machine::InsertKeys(Card& t_Card, int t_NumKeys, const EnumGenerateMode &t_GenerateMode)
-{
-    for (int index = 0; index < t_NumKeys; index++)
-    {
-        switch (t_GenerateMode)
-        {
-            case EnumGenerateMode::AUTO:
-            {
-                //Generate int until not exists in keys.
-                int t_RandomInt;
+        printf("----- Cartão (%i) -----\n", i + 1);
 
-                do {
-                    t_RandomInt = GenerateInt(MIN_VALUE_KEYS, MAX_VALUE_KEYS);
+        std::cout << "\n Estrelas: ";
+        std::cout << PrintArray(data[i].stars) << std::endl;
 
-                } while(std::find(t_Card.keys.begin(), t_Card.keys.end(), t_RandomInt) != t_Card.keys.end());
-
-                t_Card.keys[index] = t_RandomInt;
-
-                break;
-            }
-            case EnumGenerateMode::MANUAL:
-                AskInsertContext(t_Card.keys, index, EnumContext::KEY, MIN_VALUE_KEYS, MAX_VALUE_KEYS);
-                break;
-        }
+        std::cout << "\n Chaves: ";
+        std::cout << PrintArray(data[i].keys) << std::endl;
 
     }
 }
 
-
-void Machine::InsertStars(Card& t_Card, int t_NumStars, const EnumGenerateMode &t_GenerateMode)
+template<size_t N>
+void Machine::InsertContext(const EnumContext& t_Context, std::array<int, N> &t_Data, int t_NumContext, const EnumGenerateMode &t_GenerateMode)
 {
-    for (int index = 0; index < t_NumStars; index++)
+    const int minValue = EnumContext::KEY == t_Context ? MIN_VALUE_KEYS : MIN_VALUE_STARS;
+    const int maxValue = EnumContext::KEY == t_Context ? MAX_VALUE_KEYS : MAX_VALUE_STARS;
+
+    for (int index = 0; index < t_NumContext; index++)
     {
         switch (t_GenerateMode)
         {
             case EnumGenerateMode::AUTO:
             {
-                //Generate int until not exists in stars.
+                //Generate int until not exists in stars or keys.
                 int t_RandomInt;
 
                 do {
-                    t_RandomInt = GenerateInt(MIN_VALUE_STARS, MAX_VALUE_STARS);
+                    t_RandomInt = GenerateInt(minValue, maxValue);
 
-                } while(std::find(t_Card.stars.begin(), t_Card.stars.end(), t_RandomInt) != t_Card.stars.end());
+                } while(std::find(t_Data.begin(), t_Data.end(), t_RandomInt) != t_Data.end());
 
-                t_Card.stars[index] = t_RandomInt;
+                t_Data[index] = t_RandomInt;
 
                 break;
             }
             case EnumGenerateMode::MANUAL:
-                AskInsertContext(t_Card.stars, index, EnumContext::STAR, MIN_VALUE_STARS, MAX_VALUE_STARS);
+                AskInsertContext(t_Data, index, t_Context, minValue, maxValue);
                 break;
         }
 

@@ -19,6 +19,7 @@ typedef enum {
 
 typedef struct {
     int numCards;
+    EnumGenerateMode generateMode;
     EnumChoices mode;
 } MenuData;
 

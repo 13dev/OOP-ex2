@@ -63,11 +63,9 @@ private:
     //Perguntar utilizador um numero entre min-max com contexto como "chave" ou "estrela".
     int AskNumberBetween(const EnumContext& t_Context, int t_Min, int t_Max);
 
-    //Inserir estrelas baseado no generateMode.
-    void InsertStars(Card& t_Card, int t_NumStars, const EnumGenerateMode &t_GenerateMode);
-
-    //Inserir chaves baseado no generateMode.
-    void InsertKeys(Card& t_Card, int t_NumKeys, const EnumGenerateMode &t_GenerateMode);
+    // Inser by context
+    template<size_t N>
+    void InsertContext(const EnumContext& t_Context, std::array<int, N> &t_Data, int t_NumStars, const EnumGenerateMode &t_GenerateMode);
 
     //Mostrar um array em forma de string.
     template<size_t N>

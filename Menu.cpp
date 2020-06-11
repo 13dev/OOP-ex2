@@ -29,6 +29,7 @@ MenuData Menu::SelectMode()
                 return MenuData
                 {
                     .numCards = AskCards(),
+                    .generateMode = AskGenerateMode(),
                     .mode = EnumChoices::NORMAL,
                 };
 
@@ -39,6 +40,7 @@ MenuData Menu::SelectMode()
                 return MenuData
                 {
                     .numCards = AskCards(),
+                    .generateMode = AskGenerateMode(),
                     .mode = EnumChoices::MULTIPLE,
                 };
 

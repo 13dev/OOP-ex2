@@ -171,7 +171,7 @@ void Machine::InsertStars(Card& t_Card, int t_NumStars, const EnumGenerateMode &
 int Machine::AskNumberBetween(const EnumContext& t_Context, int t_Min, int t_Max)
 {
     char buffer[200];
-    sprintf(buffer, "Escolha nº de %ss entre %i e %i: ", STR_CONTEXT(t_Context), t_Min, t_Max);
+    sprintf(buffer, "Quantidade de %ss a inserir entre %i e %i: ", STR_CONTEXT(t_Context), t_Min, t_Max);
 
 //    std::stringstream buffer;
 //    buffer << "Escolha nº de " << t_Identifier << " entre " << t_Min << " e " << t_Max << ": ";
@@ -187,21 +187,21 @@ template<size_t N>
 void Machine::AskInsertContext(std::array<int, N> &t_Data, int t_Index, const EnumContext& t_Context, int t_Min, int t_Max)
 {
     char buffer[100];
-    sprintf(buffer, "Insira a [%i] %s: " , t_Index + 1, STR_CONTEXT(t_Context));
+    sprintf(buffer, "Insira %iº %s: " , t_Index + 1, STR_CONTEXT(t_Context));
 
     Machine::ParseInput(buffer, [&](int input) {
 
         // verificar se esta entre os limites.
         if(input > t_Max || input < t_Min)
         {
-            printf("Insira uma %s entre %i e %i\n", STR_CONTEXT(t_Context), t_Min, t_Max);
+            printf("Insira %s entre %i e %i\n", STR_CONTEXT(t_Context), t_Min, t_Max);
             return false;
         }
 
         // verificar se já existe no array stars
         if(std::find(t_Data.begin(), t_Data.end(), input) != t_Data.end())
         {
-            printf("Esta %s já foi votada tenta outra.\n",  STR_CONTEXT(t_Context));
+            printf("%s já existe!, tente novamente.\n", STR_CONTEXT(t_Context));
             return false;
         }
 

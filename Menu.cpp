@@ -79,7 +79,7 @@ int Menu::AskCards()
     int t_numCards = 1;
 
     do {
-        std::cout << "Quantas cartões pretende apostar? \n";
+        std::cout << "Quantas chaves pretende apostar? \n";
         std::cin >> t_numCards;
 
         if(t_numCards <= MAX_CARDS && t_numCards >= 1) {

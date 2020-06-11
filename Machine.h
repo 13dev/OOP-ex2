@@ -24,7 +24,7 @@
 #define MAX_NORMAL_KEYS 5
 #define MAX_NORMAL_STARS 2
 
-#define STR_CONTEXT(context) (context == EnumContext::KEY ? "chave" : "estrela")
+#define STR_CONTEXT(context) (context == EnumContext::KEY ? "numero" : "estrela")
 
 typedef std::function<bool(float)> ValidateInputCallback;
 
@@ -32,6 +32,7 @@ typedef enum {
     KEY,
     STAR
 } EnumContext;
+
 // Criar um tipo de dados para cada boletim.
 typedef struct {
     std::array<int, MAX_KEYS> keys;

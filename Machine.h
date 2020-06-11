@@ -24,9 +24,14 @@
 #define MAX_NORMAL_KEYS 5
 #define MAX_NORMAL_STARS 2
 
+#define STR_CONTEXT(context) (context == EnumContext::KEY ? "chave" : "estrela")
+
 typedef std::function<bool(float)> ValidateInputCallback;
 
-
+typedef enum {
+    KEY,
+    STAR
+} EnumContext;
 // Criar um tipo de dados para cada boletim.
 typedef struct {
     std::array<int, MAX_KEYS> keys;
@@ -52,10 +57,10 @@ private:
 
     // uso de template para gerar automaticamente uma função compativel com N size.
     template<size_t N>
-    void AskInsertContext(std::array<int, N> &t_Data, int t_Index, const std::string& t_Context, int t_Min, int t_Max);
+    void AskInsertContext(std::array<int, N> &t_Data, int t_Index, const EnumContext& t_Context, int t_Min, int t_Max);
 
     //Perguntar utilizador um numero entre min-max com contexto como "chave" ou "estrela".
-    int AskNumberBetween(int t_Min, int t_Max, const std::string& t_Context);
+    int AskNumberBetween(const EnumContext& t_Context, int t_Min, int t_Max);
 
     //Inserir estrelas baseado no generateMode.
     void InsertStars(Card& t_Card, int t_NumStars, const EnumGenerateMode &t_GenerateMode);

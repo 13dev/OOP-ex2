@@ -4,6 +4,7 @@
 
 int main()
 {
+
     Menu menu;
     MenuData data = menu.SelectMode();
 

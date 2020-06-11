@@ -70,8 +70,8 @@ Machine::Machine(MenuData t_menuData)
             case EnumChoices::MULTIPLE:
             {
                 // Perguntar numero de chaves e estrelas a apostar.
-                const int t_NumKeys = AskNumberBetween(MIN_KEYS, MAX_KEYS, "chaves");
-                const int t_NumStars = AskNumberBetween(MIN_STARS, MAX_STARS, "estrelas");
+                const int t_NumKeys = AskNumberBetween(EnumContext::KEY, MIN_KEYS, MAX_KEYS);
+                const int t_NumStars = AskNumberBetween(EnumContext::STAR, MIN_STARS, MAX_STARS);
 
                 //Inserir estrelas
                 InsertStars(t_Card, t_NumStars, t_GenerateMode);
@@ -131,7 +131,7 @@ void Machine::InsertKeys(Card& t_Card, int t_NumKeys, const EnumGenerateMode &t_
                 break;
             }
             case EnumGenerateMode::MANUAL:
-                AskInsertContext(t_Card.keys, index, "chave", MIN_VALUE_KEYS, MAX_VALUE_KEYS);
+                AskInsertContext(t_Card.keys, index, EnumContext::KEY, MIN_VALUE_KEYS, MAX_VALUE_KEYS);
                 break;
         }
 
@@ -160,7 +160,7 @@ void Machine::InsertStars(Card& t_Card, int t_NumStars, const EnumGenerateMode &
                 break;
             }
             case EnumGenerateMode::MANUAL:
-                AskInsertContext(t_Card.keys, index, "estrela", MIN_VALUE_STARS, MAX_VALUE_STARS);
+                AskInsertContext(t_Card.stars, index, EnumContext::STAR, MIN_VALUE_STARS, MAX_VALUE_STARS);
                 break;
         }
 
@@ -168,10 +168,10 @@ void Machine::InsertStars(Card& t_Card, int t_NumStars, const EnumGenerateMode &
 
 }
 
-int Machine::AskNumberBetween(int t_Min, int t_Max, const std::string& t_Context)
+int Machine::AskNumberBetween(const EnumContext& t_Context, int t_Min, int t_Max)
 {
     char buffer[200];
-    sprintf(buffer, "Escolha nº de %s entre %i e %i: ", t_Context.c_str(), t_Min, t_Max);
+    sprintf(buffer, "Escolha nº de %ss entre %i e %i: ", STR_CONTEXT(t_Context), t_Min, t_Max);
 
 //    std::stringstream buffer;
 //    buffer << "Escolha nº de " << t_Identifier << " entre " << t_Min << " e " << t_Max << ": ";
@@ -184,23 +184,24 @@ int Machine::AskNumberBetween(int t_Min, int t_Max, const std::string& t_Context
 }
 
 template<size_t N>
-void Machine::AskInsertContext(std::array<int, N> &t_Data, int t_Index, const std::string& t_Context, int t_Min, int t_Max)
+void Machine::AskInsertContext(std::array<int, N> &t_Data, int t_Index, const EnumContext& t_Context, int t_Min, int t_Max)
 {
     char buffer[100];
-    sprintf(buffer, "Insira a [%i] %s: " , t_Index + 1, t_Context.c_str());
+    sprintf(buffer, "Insira a [%i] %s: " , t_Index + 1, STR_CONTEXT(t_Context));
 
     Machine::ParseInput(buffer, [&](int input) {
 
         // verificar se esta entre os limites.
         if(input > t_Max || input < t_Min)
         {
+            printf("Insira uma %s entre %i e %i\n", STR_CONTEXT(t_Context), t_Min, t_Max);
             return false;
         }
 
         // verificar se já existe no array stars
         if(std::find(t_Data.begin(), t_Data.end(), input) != t_Data.end())
         {
-            printf("Esta %s já foi votada tenta outra.\n", t_Context.c_str());
+            printf("Esta %s já foi votada tenta outra.\n",  STR_CONTEXT(t_Context));
             return false;
         }
 

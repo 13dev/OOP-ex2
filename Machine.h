@@ -52,13 +52,6 @@ private:
 
     // uso de template para gerar automaticamente uma função compativel com N size.
     template<size_t N>
-    void AskInsertStar(std::array<int, N> &stars, int);
-
-    // uso de template para gerar automaticamente uma função compativel com N size.
-    template<size_t N>
-    void AskInsertKey(std::array<int, N> &keys, int t_Index);
-
-    template<size_t N>
     void AskInsertContext(std::array<int, N> &t_Data, int t_Index, const std::string& t_Context, int t_Min, int t_Max);
 
     //Perguntar utilizador um numero entre min-max com contexto como "chave" ou "estrela".

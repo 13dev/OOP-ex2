@@ -131,7 +131,7 @@ void Machine::InsertKeys(Card& t_Card, int t_NumKeys, const EnumGenerateMode &t_
                 break;
             }
             case EnumGenerateMode::MANUAL:
-                AskInsertContext(t_Card.keys, index, "");
+                AskInsertContext(t_Card.keys, index, "chave", MIN_VALUE_KEYS, MAX_VALUE_KEYS);
                 break;
         }
 
@@ -160,7 +160,7 @@ void Machine::InsertStars(Card& t_Card, int t_NumStars, const EnumGenerateMode &
                 break;
             }
             case EnumGenerateMode::MANUAL:
-                AskInsertStar(t_Card.stars, index);
+                AskInsertContext(t_Card.keys, index, "estrela", MIN_VALUE_STARS, MAX_VALUE_STARS);
                 break;
         }
 
@@ -200,7 +200,7 @@ void Machine::AskInsertContext(std::array<int, N> &t_Data, int t_Index, const st
         // verificar se já existe no array stars
         if(std::find(t_Data.begin(), t_Data.end(), input) != t_Data.end())
         {
-            printf("%s já foi votada tenta outra.\n", t_Context.c_str());
+            printf("Esta %s já foi votada tenta outra.\n", t_Context.c_str());
             return false;
         }
 
@@ -209,37 +209,6 @@ void Machine::AskInsertContext(std::array<int, N> &t_Data, int t_Index, const st
         return true;
 
     });
-
-}
-
-template<size_t N>
-void Machine::AskInsertKey(std::array<int, N> &keys, int t_Index)
-{
-    int input = 0;
-
-    do {
-        printf("Insira a [%i] chave: " , t_Index + 1);
-        std::cin >> input;
-
-        // verificar limites da chave.
-        if(input > MAX_VALUE_KEYS || input < MIN_VALUE_KEYS)
-        {
-            printf("Insira chave entre %i e %i\n", MIN_VALUE_KEYS, MAX_VALUE_KEYS);
-            continue;
-        }
-
-        // verificar se já existe a estrela
-        if(std::find(keys.begin(), keys.end(), input) != keys.end())
-        {
-            printf("Chave já foi votada tenta outra.\n");
-            continue;
-        }
-
-        // se esta tudo ok, insere no array keys.
-        break;
-    } while(true);
-
-    keys[t_Index] = input;
 
 }
 

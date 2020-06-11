@@ -96,7 +96,7 @@ Machine::Machine(MenuData t_menuData)
         std::cout << "\n Estrelas: ";
         std::cout << PrintArray(data[i].stars);
 
-        std::cout << "\n Chaves: ";
+        std::cout << "\n Chave: ";
         std::cout << PrintArray(data[i].keys) << std::endl;
 
     }
@@ -212,7 +212,3 @@ std::string Machine::PrintArray(const std::array<int, N> &t_Data)
 
     return buffer;
 }
-
-
-
-

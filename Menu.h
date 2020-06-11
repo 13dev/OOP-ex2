@@ -27,6 +27,7 @@ class Menu {
 
 private:
     int AskCards();
+    static bool ParseIntInput(int& value);
 
 public:
     Menu();

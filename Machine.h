@@ -63,9 +63,9 @@ private:
     //Perguntar utilizador um numero entre min-max com contexto como "chave" ou "estrela".
     int AskNumberBetween(const EnumContext& t_Context, int t_Min, int t_Max);
 
-    // Inser by context
+    // Insert by context
     template<size_t N>
-    void InsertContext(const EnumContext& t_Context, std::array<int, N> &t_Data, int t_NumStars, const EnumGenerateMode &t_GenerateMode);
+    void InsertContext(const EnumContext& t_Context, std::array<int, N> &t_Data, const MenuData &t_MenuData);
 
     //Mostrar um array em forma de string.
     template<size_t N>
@@ -73,4 +73,7 @@ private:
 
     // Validate input, pedir enquanto valor não for valido.
     static int ParseInput(const std::string& t_Identifier, const ValidateInputCallback& t_Callback);
+
+    // Obter o numero maximo e minimo do contexto, se escolha for multipla, irá pedir ao utilizador nº numeros de contexto
+    int GetNumContext(const EnumContext& t_Context, const EnumChoices& t_Mode);
 };

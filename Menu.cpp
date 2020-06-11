@@ -4,6 +4,7 @@
 
 #include "Menu.h"
 #include <iostream>
+#include <limits>
 #include "Machine.h"
 
 Menu::Menu()
@@ -76,23 +77,37 @@ EnumGenerateMode Menu::AskGenerateMode()
 
 }
 
+
+bool Menu::ParseIntInput(int& value)
+{
+    std::cin >> value;
+
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    return std::cin.fail();
+}
+
 int Menu::AskCards()
 {
-    int t_numCards = 1;
+    int t_Buffer;
 
     do {
         std::cout << "Quantas chaves pretende apostar? \n";
-        std::cin >> t_numCards;
 
-        if(t_numCards <= MAX_CARDS && t_numCards >= 1) {
-            break;
+        if(Menu::ParseIntInput(t_Buffer)) {
+            continue;
         }
 
-        printf("Escolha numero entre 1 e %i!\n", MAX_CARDS);
+        if(t_Buffer < 1 || t_Buffer > MAX_CARDS) {
+            printf("Escolha numero entre 1 e %i!\n", MAX_CARDS);
+            continue;
+        }
+
+       break;
 
     } while(true);
 
-
-    return t_numCards;
+    return t_Buffer;
 }
 

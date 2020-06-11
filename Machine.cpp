@@ -51,6 +51,20 @@ Card Machine::InsertCard(Card& t_Card, int t_Index)
     return t_Card;
 }
 
+int Machine::GetNumContext(const EnumContext& t_Context, const EnumChoices& t_Mode)
+{
+    const int maxValue = EnumContext::STAR == t_Context ? MAX_STARS : MAX_KEYS;
+    const int minValue = EnumContext::STAR == t_Context ? MIN_STARS : MIN_KEYS;
+
+    switch (t_Mode)
+    {
+        case EnumChoices::MULTIPLE:
+            return AskNumberBetween(t_Context, minValue, maxValue);
+        case EnumChoices::NORMAL:
+            return EnumContext::STAR == t_Context ? MAX_NORMAL_STARS : MAX_NORMAL_KEYS;
+
+    }
+}
 
 Machine::Machine(MenuData t_menuData)
 {
@@ -61,22 +75,15 @@ Machine::Machine(MenuData t_menuData)
         //Criar novo cartao inicializado tudo a zero para evitar garbage nums.
         Card t_Card = {0};
 
-        printf("----- Apostando no (%i) Cartão -----\n", i + 1);
-
-        // Perguntar numero de numeros e estrelas a apostar.
-        const int t_NumKeys = EnumChoices::MULTIPLE == t_menuData.mode
-                ? AskNumberBetween(EnumContext::KEY, MIN_KEYS, MAX_KEYS)
-                : MAX_NORMAL_KEYS;
-
-        const int t_NumStars = EnumChoices::MULTIPLE == t_menuData.mode
-                ? AskNumberBetween(EnumContext::STAR, MIN_STARS, MAX_STARS)
-                : MAX_NORMAL_STARS;
+        if(t_menuData.generateMode == MANUAL) {
+            printf("----- Apostando no (%i) Cartão -----\n", i + 1);
+        }
 
         //Inserir estrelas
-        InsertContext(EnumContext::STAR, t_Card.stars, t_NumStars, t_menuData.generateMode);
+        InsertContext(EnumContext::STAR, t_Card.stars, t_menuData);
 
         // Inserir numeros
-        InsertContext(EnumContext::KEY, t_Card.keys, t_NumKeys, t_menuData.generateMode);
+        InsertContext(EnumContext::KEY, t_Card.keys, t_menuData);
 
         // Inserir cartão
         InsertCard(t_Card, i);
@@ -84,10 +91,10 @@ Machine::Machine(MenuData t_menuData)
 
     for (int i = 0; i < t_menuData.numCards; ++i) {
 
-        printf("----- Cartão (%i) -----\n", i + 1);
+        printf("\n\n----- Cartão (%i) -----", i + 1);
 
         std::cout << "\n Estrelas: ";
-        std::cout << PrintArray(data[i].stars) << std::endl;
+        std::cout << PrintArray(data[i].stars);
 
         std::cout << "\n Chaves: ";
         std::cout << PrintArray(data[i].keys) << std::endl;
@@ -96,14 +103,16 @@ Machine::Machine(MenuData t_menuData)
 }
 
 template<size_t N>
-void Machine::InsertContext(const EnumContext& t_Context, std::array<int, N> &t_Data, int t_NumContext, const EnumGenerateMode &t_GenerateMode)
+void Machine::InsertContext(const EnumContext& t_Context, std::array<int, N> &t_Data, const MenuData &t_MenuData)
 {
     const int minValue = EnumContext::KEY == t_Context ? MIN_VALUE_KEYS : MIN_VALUE_STARS;
     const int maxValue = EnumContext::KEY == t_Context ? MAX_VALUE_KEYS : MAX_VALUE_STARS;
 
-    for (int index = 0; index < t_NumContext; index++)
+    const int numContext = GetNumContext(t_Context, t_MenuData.mode);
+
+    for (int index = 0; index < numContext; index++)
     {
-        switch (t_GenerateMode)
+        switch (t_MenuData.generateMode)
         {
             case EnumGenerateMode::AUTO:
             {
